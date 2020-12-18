@@ -1,0 +1,59 @@
+@font-face {
+    src: url('../fonts/Lato-Regular.ttf');
+    font-family: 'Lato';
+}
+
+body {
+    background-color: #343D4B;
+    color: #CCC;
+    margin: 0;
+    font-family: 'Lato';
+}
+
+.container {
+    text-align: center;
+}
+
+#splits {
+    margin-bottom: 15px;
+}
+
+input.split {
+    display: inline-block;
+    width: 75%;
+    font-size: 16pt;
+    background-color: rgba(0, 0, 0, 0);
+    border: none;
+    border-bottom: 2px solid #CCC;
+    color: #CCC;
+}
+
+input.split:focus {
+    outline: none;
+}
+
+input.split:first-child {
+    margin-top: 15px;
+}
+
+input.split:not(:last-child) {
+    margin-bottom: 10px;
+}
+
+button.add {
+    padding: 2.5px 15px;
+    border: none;
+    border-radius: 50px;
+    background-color: #41D28A;
+    font-size: 32pt;
+    font-weight: bold;
+    color: white;
+}
+
+button.add:hover {
+    cursor: pointer;
+}
+
+button.add:focus {
+    outline: none;
+}

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Splits</title>
+
+    <link rel="stylesheet" href="../css/edit.css">
+</head>
+<body>
+
+    <div class="container">
+        <div id="splits">
+        </div>
+        <button class="add" onclick="addField()">+</button><br/>
+        <a href="#" onclick="save()" style="color: #CCC; margin-top: 10px;">Save</a>
+    </div>
+
+    <script>
+
+        function save()
+        {
+            let arr = [];
+            const el_arr = document.getElementsByClassName('split');
+            for (var i = 0; i < el_arr.length; i++)
+                arr.push(el_arr[i].value);
+            window.api.send('toMain', { event: 'save', data: arr });
+        }
+
+        function addField()
+        {
+            const container = document.getElementById('splits');
+            const input = document.createElement("input");
+            input.type = "text";
+            input.value = "Split Name";
+            input.classList.add('split');
+            container.appendChild(input);
+        }
+
+    </script>
+    
+</body>
+</html>

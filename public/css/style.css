@@ -1,0 +1,58 @@
+@font-face {
+    src: url('../fonts/Lato-Regular.ttf');
+    font-family: 'Lato';
+}
+
+body, html {
+    height: 100%;
+}
+
+body {
+    background-color: #0d1117;
+    color: gray;
+    margin: 0;
+    font-family: 'Lato';
+}
+
+.container {
+    height: 100%;
+}
+
+#timer {
+    margin: 0;
+    font-size: 48px;
+    font-weight: bold;
+    font-kerning: none;
+    text-align: center;
+    margin-top: 25px;
+}
+
+.start {
+    color: #1DAB65;
+}
+
+.stop {
+    color: #1D6AAB;
+}
+
+.splits span {
+    margin: 0;
+    font-size: 16pt;
+}
+
+.splits {
+    padding: 10px;
+}
+
+.split-container:not(:last-child) {
+    padding-bottom: 5px;
+    border-bottom: 1px solid gray;
+}
+
+.split-container:not(:first-child) {
+    margin-top: 5px;
+}
+
+.split-time {
+    float: right;
+}

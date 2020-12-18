@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Timer</title>
+
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+    <div class="container">
+        <div class="splits" id="splits"></div>
+        <h1 id="timer">00:00.00</h1>
+    </div>
+
+    <script>
+        const timer = document.getElementById("timer");
+        const splits = [];
+        let current_split = 0;
+        let split_time;
+
+        var running = false;
+        var start, interval;
+
+        function createSplit(name)
+        {
+            // Container
+            const container = document.createElement('div');
+            container.classList.add('split-container');
+
+            // Name
+            const split_name = document.createElement('span');
+            split_name.classList.add('split-name');
+            split_name.innerText = name;
+            container.appendChild(split_name);
+
+            // Time
+            const time = document.createElement('span');
+            time.classList.add('split-time');
+            time.innerText = '00:00.00';
+            container.appendChild(time);
+            splits.push(time);
+
+            // Append
+            document.getElementById('splits').appendChild(container);
+        }
+
+        function pad(str, num, what)
+        {
+            str = str.toString();
+            const x = num - str.length;
+            var new_str = "";
+            for (var i = 0; i < x; i++)
+                new_str += what;
+            new_str += str;
+            return new_str;
+        }
+
+        function setTimerText()
+        {
+            const now = Date.now();
+
+            const diff = new Date(now - start);
+            timer.innerText = pad(diff.getMinutes(), 2, '0') + ":"
+                + pad(diff.getSeconds(), 2, '0') + "."
+                + pad(Math.ceil(diff.getMilliseconds() / 10), 2, '0');
+            
+            const split_dif = new Date(now - split_time);
+            splits[current_split].innerText =
+                  pad(split_dif.getMinutes(), 2, '0') + ":"
+                + pad(split_dif.getSeconds(), 2, '0') + "."
+                + pad(Math.ceil(split_dif.getMilliseconds() / 10), 2, '0');
+        }
+
+        window.api.receive('fromMain', (data) => {
+            if (data.event == "hotkey") {
+                if (!running) {
+                    timer.classList.remove('stop');
+                    timer.classList.add('start');
+
+                    const new_split = splits[current_split];
+                    new_split.classList.add('start');
+
+                    start = Date.now();
+                    split_time = start;
+                    interval = setInterval(setTimerText, 10);
+                    running = true;
+                } else {
+                    const now = Date.now();
+                    
+                    splits[current_split].classList.remove('start');
+                    splits[current_split].classList.add('stop');
+
+                    current_split++;
+                    split_time = now;
+                    if (current_split == splits.length) {
+                        timer.classList.remove('start');
+                        timer.classList.add('stop');
+                        
+                        running = false;
+                        clearInterval(interval);
+
+                        window.api.send('toMain', {event: 'final', data: timer.innerText});
+                        return;
+                    }
+
+                    const new_split = splits[current_split];
+                    new_split.classList.add('start');
+                }
+            }
+
+            else if (data.event == "new_splits") {
+                console.log(data.splits);
+
+                const container = document.getElementById('splits');
+                while (container.firstChild)
+                    container.removeChild(container.firstChild);
+                splits.splice(0,splits.length);
+                
+                for (var i = 0; i < data.splits.length; i++) {
+                    if (data.splits[i] != "")
+                        createSplit(data.splits[i]);
+                }
+            }
+
+            else if (data.event == "reply_splits") {
+                const names = document.getElementsByClassName('split-name');
+                const arr = [];
+                for (var i = 0; i < names.length; i++)
+                    arr.push(names[i].innerText);
+                window.api.send('reply_splits', arr);
+            }
+        });
+    </script>
+
+</body>
+</html>
